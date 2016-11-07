@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 class QR_User_Login {
     static $instance = null;
+    var $role = 'qr_login';
     
     static function & get_instance() {
         if (null == QR_User_Login::$instance) {
@@ -40,13 +41,21 @@ class QR_User_Login {
     
     function QR_User_Login(){
         //ACTION AND FILTERS HOOKS
+        add_action( 'edit_user_profile', array($this, 'edit_user_profile') );
+    }
+    
+    function edit_user_profile($profileuser){
+        if (user_can($profileuser->ID, 'qr_login')){
+            include_once( 'templates/edit_user_profile.php' );
+        }
+        
     }
     
     function activate_plugin() {
-        
+        add_role( $this->role, 'QR Login', array( 'read' => true, 'qr_login' => true ) );
     }
     function desactivate_plugin() {
-        
+        remove_role( $this->role );
     }
     
 }
