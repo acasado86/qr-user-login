@@ -44,6 +44,27 @@ class QR_User_Login {
         //ACTION AND FILTERS HOOKS
         add_action( 'edit_user_profile', array($this, 'edit_user_profile') );
         add_action( 'login_head', array($this, 'check_qr_login') );
+        add_action('admin_menu', array($this, 'admin_menu') );
+    }
+    
+    function admin_menu(){
+        add_submenu_page('users.php', 'QR Login Capability', 'QR Login Capability', 'manage_options', 'qr-login-capability', array($this, 'manage_qr_login_capability'));
+    }
+    
+    function manage_qr_login_capability(){
+        $nonce = filter_input(INPUT_POST, '_wpnonce');
+        if ( $nonce && wp_verify_nonce($nonce, 'manage_qr_login_capability') ){
+            //Remove Capability
+            foreach (wp_roles()->role_objects as $role => $role_object){
+                $role_object->remove_cap('qr_login');
+            }
+            //Add Capability
+            $qr_login_roles = filter_input(INPUT_POST, 'qr_login_roles', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            foreach ($qr_login_roles as $role_name){
+                get_role($role_name)->add_cap('qr_login');
+            }
+        }
+        include_once( 'templates/qr-login-capability.php' );
     }
     
     function check_qr_login(){
