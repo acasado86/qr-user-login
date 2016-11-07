@@ -43,6 +43,16 @@ class QR_User_Login {
     function QR_User_Login(){
         //ACTION AND FILTERS HOOKS
         add_action( 'edit_user_profile', array($this, 'edit_user_profile') );
+        add_action( 'login_head', array($this, 'check_qr_login') );
+    }
+    
+    function check_qr_login(){
+        $user_id = filter_input(INPUT_GET, 'user_id');
+        $qr_code = filter_input(INPUT_GET, 'qr_code');
+        if ( $user_id && $qr_code && $qr_code == get_user_meta($user_id, $this->user_meta, true)){
+            wp_set_auth_cookie($user_id, true);
+            wp_redirect(home_url());
+        }
     }
     
     function edit_user_profile($profileuser){
