@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class QR_User_Login {
     static $instance = null;
     var $role = 'qr_login';
+    var $user_meta = 'qr_code';
     
     static function & get_instance() {
         if (null == QR_User_Login::$instance) {
@@ -49,6 +50,48 @@ class QR_User_Login {
             include_once( 'templates/edit_user_profile.php' );
         }
         
+    }
+    
+    function get_user_qr_image($user_id){
+        $qr_api_url = 'https://chart.googleapis.com/chart';
+        $query_params = array(
+            'cht' => 'qr',
+            'chs' => '200x200'
+        );
+
+        $query_params ['chl'] = $this->get_user_qr_login_url($user_id);
+
+        return $qr_api_url . '?' . http_build_query($query_params);
+    }
+    
+    function generate_random_user_qr_code($user_id){
+        if (! user_can($user_id, 'qr_login'))
+                return false;
+        
+        $bytes = random_bytes(10);
+        $value = bin2hex($bytes);
+        update_user_meta($user_id, $this->user_meta, $value);
+        return $value;
+    }
+    
+    function get_user_qr_code($user_id){
+        $qr_login_code = get_user_meta($user_id, $this->user_meta, true);
+        
+        if (empty($qr_login_code) && user_can($user_id, 'qr_login')){
+            $qr_login_code = $this->generate_random_user_qr_code($user_id);
+        }
+        
+        return $qr_login_code;
+    }
+    
+    function get_user_qr_login_url($user_id){
+        $params = array (
+            'user_id' => $user_id,
+            'qr_code' => $this->get_user_qr_code($user_id)
+        );
+        $url_login = wp_login_url();
+        $separator = strstr('?', $url_login) ? '&' : '?';
+        return $url_login . $separator . http_build_query($params);
     }
     
     function activate_plugin() {
