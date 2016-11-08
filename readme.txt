@@ -10,7 +10,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
 == Description ==
-Allow login to users using a link (or QR code). This plugin can be used for create custom event invitation, for example: wedding, etc.
+Allow users to login using a link (or QR code). This plugin can be used for create custom event invitation, for example: wedding, etc.
 
 == Installation ==
 For use this plugin, users have be assigned to "QR Login" user group. It is also possible to give other groups this capability (QR Login Capability).
@@ -18,3 +18,5 @@ For use this plugin, users have be assigned to "QR Login" user group. It is also
 == Changelog ==
 
 = 1.0 =
+- Generate random login link and QR image using Google Charts API.
+- Enable/Disable QR Login administation page for other user roles (administrator, editor, author, ...).
