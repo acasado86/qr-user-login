@@ -64,24 +64,35 @@ class QR_User_Login {
             }
             //Add Capability
             $qr_login_roles = filter_input(INPUT_POST, 'qr_login_roles', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            foreach ($qr_login_roles as $role_name){
-                get_role($role_name)->add_cap($this->capability);
+            if ($qr_login_roles){
+                foreach ($qr_login_roles as $role_name){
+                    get_role($role_name)->add_cap($this->capability);
+                }
             }
         }
         include_once( 'templates/qr-login-capability.php' );
     }
     
+    function can_user_login($user_id){
+        if (!is_super_admin($user_id)){
+            return user_can($user_id, $this->capability);
+        }
+        
+        $role_capabilities = get_user_by('ID', $user_id)->get_role_caps();
+        return array_key_exists($this->capability, $role_capabilities) ? $role_capabilities[$this->capability] : false;
+    }
+    
     function check_qr_login(){
         $user_id = filter_input(INPUT_GET, 'user_id');
         $qr_code = filter_input(INPUT_GET, 'qr_code');
-        if ( $user_id && $qr_code && user_can($user_id, $this->capability) && $qr_code == get_user_meta($user_id, $this->user_meta, true)){
+        if ( $user_id && $qr_code && $this->can_user_login($user_id) && $qr_code == get_user_meta($user_id, $this->user_meta, true)){
             wp_set_auth_cookie($user_id, true);
             wp_redirect(home_url());
         }
     }
     
     function edit_user_profile($profileuser){
-        if (user_can($profileuser->ID, $this->capability)){
+        if ($this->can_user_login($profileuser->ID)){
             include_once( 'templates/edit_user_profile.php' );
         }
         
@@ -100,7 +111,7 @@ class QR_User_Login {
     }
     
     function generate_random_user_qr_code($user_id){
-        if (! user_can($user_id, $this->capability))
+        if (! $this->can_user_login($user_id))
                 return false;
         
         $bytes = random_bytes(10);
@@ -112,7 +123,7 @@ class QR_User_Login {
     function get_user_qr_code($user_id){
         $qr_login_code = get_user_meta($user_id, $this->user_meta, true);
         
-        if (empty($qr_login_code) && user_can($user_id, $this->capability)){
+        if (empty($qr_login_code) && $this->can_user_login($user_id)){
             $qr_login_code = $this->generate_random_user_qr_code($user_id);
         }
         
@@ -132,11 +143,11 @@ class QR_User_Login {
     function activate_plugin() {
         add_role( $this->role, 'QR Login', array( 'read' => true, $this->capability => true ) );
     }
+    
     function desactivate_plugin() {
         remove_role( $this->role );
         delete_metadata('user', null, $this->user_meta, '', true);
     }
-    
 }
 $QRUL_instance = QR_User_Login::get_instance();
 register_activation_hook(__FILE__, array($QRUL_instance, 'activate_plugin'));
