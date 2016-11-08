@@ -56,7 +56,9 @@ class QR_User_Login {
         if ( $nonce && wp_verify_nonce($nonce, 'manage_qr_login_capability') ){
             //Remove Capability
             foreach (wp_roles()->role_objects as $role => $role_object){
-                $role_object->remove_cap('qr_login');
+                if ($role != $this->role){
+                    $role_object->remove_cap('qr_login');
+                }
             }
             //Add Capability
             $qr_login_roles = filter_input(INPUT_POST, 'qr_login_roles', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
