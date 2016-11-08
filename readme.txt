@@ -1,7 +1,7 @@
 === QR User Login ===
 Contributors: acasado
 Donate link: 
-Tags: 
+Tags: qr, login
 Requires at least: 
 Tested up to: 
 Stable tag: 
