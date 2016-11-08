@@ -12,5 +12,11 @@
     <p><label for="<?php echo $role ?>"><input type="checkbox" id="<?php echo $role ?>" name="qr_login_roles[]" value="<?php echo $role ?>" <?php checked($role_object->has_cap('qr_login')) ?> <?php disabled($role == 'qr_login') ?>/><?php echo $role ?></label></p>
     <?php endforeach; ?>
     <?php wp_nonce_field('manage_qr_login_capability'); ?>
-    <input type="submit" class="button primary" value="Save" />
+    <input type="submit" class="button primary" value="<?php _e('Save') ?>" />
+</form>
+<h2>Settings</h2>
+<form method="post" action="<?php echo admin_url('users.php?page=qr-login-capability') ?>">
+    <p><label for="confirm-account"><input type="checkbox" id="confirm-account" name="qr_login_settings[]" value="confirm-account" <?php checked(true) ?> /><?php _e('Always confirm account before login.') ?></label></p>
+    <?php wp_nonce_field('manage_qr_login_settings'); ?>
+    <input type="submit" class="button primary" value="<?php _e('Save') ?>" />
 </form>

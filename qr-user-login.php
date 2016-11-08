@@ -66,6 +66,8 @@ class QR_User_Login {
             foreach ($qr_login_roles as $role_name){
                 get_role($role_name)->add_cap($this->capability);
             }
+        } else if ( $nonce && wp_verify_nonce($nonce, 'manage_qr_login_settings') ){
+            //TODO SAVE SETTINGS
         }
         include_once( 'templates/qr-login-capability.php' );
     }
