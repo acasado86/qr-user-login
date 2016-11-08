@@ -19,4 +19,4 @@ For use this plugin, users have be assigned to "QR Login" user group. It is also
 
 = 1.0 =
 - Generate random login link and QR image using Google Charts API.
-- Enable/Disable QR Login administation page for other user roles (administrator, editor, author, ...).
+- Enable/Disable QR Login administration page for other user roles (administrator, editor, author, ...).

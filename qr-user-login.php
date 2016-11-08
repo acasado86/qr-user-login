@@ -3,7 +3,7 @@
 /*
 Plugin Name: QR User Login
 Plugin URI: https://github.com/acasado86/qr-user-login
-Description: Allow login to users using a link (or QR code).
+Description: Allow users to login using a link (or QR code).
 Version: 1.0.0
 Author: acasado
 Author URI: https://github.com/acasado86
