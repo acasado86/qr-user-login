@@ -133,6 +133,7 @@ class QR_User_Login {
     }
     function desactivate_plugin() {
         remove_role( $this->role );
+        delete_metadata('user', null, $this->user_meta, '', true);
     }
     
 }
