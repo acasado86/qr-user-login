@@ -44,6 +44,7 @@ class QR_User_Login {
     function QR_User_Login(){
         //ACTION AND FILTERS HOOKS
         add_action( 'edit_user_profile', array($this, 'edit_user_profile') );
+        add_action( 'show_user_profile', array($this, 'edit_user_profile') );
         add_action( 'login_head', array($this, 'check_qr_login') );
         add_action('admin_menu', array($this, 'admin_menu') );
     }
