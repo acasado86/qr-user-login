@@ -15,6 +15,11 @@ Allow users to login using a link (or QR code). This plugin can be used for crea
 == Installation ==
 For use this plugin, users have be assigned to "QR Login" user group. It is also possible to give other groups this capability (QR Login Capability).
 
+== Screenshots ==
+
+1. QR is displayed on the user profile page.
+2. Select which roles can log via QR.
+
 == Changelog ==
 
 = 1.0 =
